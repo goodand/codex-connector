@@ -1,0 +1,141 @@
+[workspace]
+root = "third_party/subtrees"
+
+# This file records subtree decisions after Full Read review.
+# It is intentionally separate from repo-level clone manifests.
+
+[[subtrees]]
+id = "pixelmatch"
+full_name = "mapbox/pixelmatch"
+upstream_url = "https://github.com/mapbox/pixelmatch.git"
+upstream_ref = "main"
+source_manifest = "third_party/repositories.toml"
+source_category = "fallback_validation"
+source_priority = 1
+source_path = "."
+subtree_prefix = "third_party/subtrees/pixelmatch"
+import_mode = "whole_repo"
+decision = "adopt_subtree"
+requires_entrypoint_review = false
+adapter = "src/validate/pixelmatchAdapter.ts"
+validation_command = "npm test"
+notes = "Small root package with clear index.js entrypoint and node:test coverage"
+
+[[subtrees]]
+id = "looks_same"
+full_name = "gemini-testing/looks-same"
+upstream_url = "https://github.com/gemini-testing/looks-same.git"
+upstream_ref = "master"
+source_manifest = "third_party/manifests/visual_validation.toml"
+source_category = "fallback_policy_engine_validation"
+source_priority = 2
+source_path = "."
+subtree_prefix = "third_party/subtrees/looks-same"
+import_mode = "whole_repo"
+decision = "defer"
+requires_entrypoint_review = false
+adapter = "src/validate/looksSameAdapter.ts"
+validation_command = "npm test"
+notes = "Good whole-repo subtree candidate, but lower priority than pixelmatch"
+
+[[subtrees]]
+id = "odiff_bin"
+full_name = "dmtrKovalenko/odiff"
+upstream_url = "https://github.com/dmtrKovalenko/odiff.git"
+upstream_ref = "main"
+source_manifest = "third_party/manifests/visual_validation.toml"
+source_category = "fallback_policy_engine_validation"
+source_priority = 2
+source_path = "npm_packages/odiff-bin"
+subtree_prefix = "third_party/subtrees/odiff-bin"
+import_mode = "split_subdir"
+decision = "adopt_subtree"
+requires_entrypoint_review = false
+adapter = "src/validate/odiffAdapter.ts"
+validation_command = "node odiff.js"
+notes = "Root repo is a private monorepo; odiff-bin is the real consumable package boundary"
+
+[[subtrees]]
+id = "dom_to_pptx"
+full_name = "atharva9167j/dom-to-pptx"
+upstream_url = "https://github.com/atharva9167j/dom-to-pptx.git"
+upstream_ref = "master"
+source_manifest = "third_party/repositories.toml"
+source_category = "visual_object_ir_normalizer"
+source_priority = 1
+source_path = "."
+subtree_prefix = "third_party/subtrees/dom-to-pptx"
+import_mode = "whole_repo"
+decision = "defer"
+requires_entrypoint_review = false
+adapter = "src/extract/domToPptxAdapter.ts"
+validation_command = "npm test"
+notes = "Use whole repo if vendored; split_subdir src/ does not match upstream package boundary"
+
+[[subtrees]]
+id = "pptxgenjs"
+full_name = "gitbrent/PptxGenJS"
+upstream_url = "https://github.com/gitbrent/PptxGenJS.git"
+upstream_ref = "master"
+source_manifest = "third_party/repositories.toml"
+source_category = "pptx_output_backend"
+source_priority = 1
+source_path = "."
+subtree_prefix = "third_party/subtrees/PptxGenJS"
+import_mode = "package_dependency"
+decision = "package_dependency"
+requires_entrypoint_review = false
+adapter = "src/compile/pptxgenjsCompiler.ts"
+validation_command = "npm test"
+notes = "Large package; prefer upstream dependency unless generator internals must be patched"
+
+[[subtrees]]
+id = "backstopjs"
+full_name = "garris/BackstopJS"
+upstream_url = "https://github.com/garris/BackstopJS.git"
+upstream_ref = "master"
+source_manifest = "third_party/manifests/visual_validation.toml"
+source_category = "fallback_policy_engine_validation"
+source_priority = 1
+source_path = "."
+subtree_prefix = "third_party/subtrees/backstopjs"
+import_mode = "package_dependency"
+decision = "package_dependency"
+requires_entrypoint_review = false
+adapter = "src/validate/backstopRunner.ts"
+validation_command = "npm test"
+notes = "Config-driven visual regression app; better as package dependency or external CLI"
+
+[[subtrees]]
+id = "opendataloader_pdf_core"
+full_name = "opendataloader-project/opendataloader-pdf"
+upstream_url = "https://github.com/opendataloader-project/opendataloader-pdf.git"
+upstream_ref = "main"
+source_manifest = "third_party/manifests/reference_repos.toml"
+source_category = "semantic_ir_reference"
+source_priority = 2
+source_path = "java/opendataloader-pdf-core"
+subtree_prefix = "third_party/subtrees/opendataloader-pdf-core"
+import_mode = "split_subdir"
+decision = "reference_only"
+requires_entrypoint_review = false
+adapter = ""
+validation_command = ""
+notes = "Keep schema.json/options.json as synced references first; subtree only if processor code must be patched"
+
+[[subtrees]]
+id = "docling_repo"
+full_name = "docling-project/docling"
+upstream_url = "https://github.com/docling-project/docling.git"
+upstream_ref = "main"
+source_manifest = "third_party/manifests/visual_ir.toml"
+source_category = "visual_object_ir_normalizer"
+source_priority = 2
+source_path = "."
+subtree_prefix = "third_party/subtrees/docling-repo"
+import_mode = "package_dependency"
+decision = "reference_only"
+requires_entrypoint_review = false
+adapter = ""
+validation_command = ""
+notes = "Use as architecture and pipeline reference; prefer package dependency for experiments, subtree only if patching pipeline internals"
